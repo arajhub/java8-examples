@@ -10,7 +10,7 @@ public class SupplierConsumer {
 
     public static void main(String[] args) {
 
-        List<String> sample = Arrays.asList("aa","bb","cc","dd");
+        List<String> sample = Arrays.asList("aa","bb","cc","ddd");
 
         Consumer<String> consumer = toBeConsumed -> {
             System.out.println("In Consumer =>" + toBeConsumed);
@@ -26,10 +26,19 @@ public class SupplierConsumer {
 
         sample.stream().forEach(consumer);
         sample.stream().map(func).forEach(consumer);
-        Stream.generate(supplier).forEach(consumer);
+        //Stream.generate(supplier).forEach(consumer);
 
+        Predicate<String> maxLengthPredicate = (inputStr) -> {
+           return (inputStr.length() < 10);
+        };
+        Predicate<String> minLengthPredicate = (inputStr) -> {
+            return (inputStr.length() > 2);
+        };
+        sample.stream().filter(maxLengthPredicate.and(minLengthPredicate)).forEach(consumer);
 
+        sample.stream().filter(maxLengthPredicate.or(minLengthPredicate)).forEach(consumer);
 
+        sample.stream().filter(x -> x.length() < 3).map(func).forEach(consumer);
 
     }
 
